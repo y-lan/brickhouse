@@ -139,11 +139,20 @@ public class VectorUnionSumUDAF extends AbstractGenericUDAFResolver {
             if (listLen > myagg.sumArray.size())
                 myagg.sumArray.ensureCapacity(listLen);
 
+            if (myagg.sumArray.size() < listLen) {
+                myagg.sumArray.ensureCapacity(listLen);
+                while (myagg.sumArray.size() < listLen) {
+                    myagg.sumArray.add(0.0);
+                }
+            }
+
             for (int i = 0; i < listLen; ++i) {
                 Object listElem = inputOI.getListElement(listObj, i);
                 double listElemDbl = NumericUtil.getNumericValue(
                         (PrimitiveObjectInspector) inputOI.getListElementObjectInspector(), listElem);
-                Double oldVal = myagg.sumArray.get(i);
+
+                Double oldVal = myagg.sumArray.size() > i ? myagg.sumArray.get(i) : null;
+
                 if (oldVal != null) {
                     myagg.sumArray.set(i, oldVal + listElemDbl);
                 } else {
