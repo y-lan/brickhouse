@@ -53,7 +53,7 @@ public class VectorMultUDF extends GenericUDF {
 
 
     public Object evaluateList(Object listObj, double scalar) {
-        Object retList = retListInspector.create(0);
+        Object retList = retListInspector.create(listInspector.getListLength(listObj));
         for (int i = 0; i < listInspector.getListLength(listObj); ++i) {
             Object listVal = this.listInspector.getListElement(listObj, i);
             double listDbl = NumericUtil.getNumericValue(valueInspector, listVal);
